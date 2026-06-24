@@ -1,0 +1,49 @@
+1.1 SCRIPT PYTHON
+Scrivi uno script Python che sposta ogni file più vecchio di un certo numero di secondi da una directory specificata e da tutte le sue sottodirectory in una cartella di archivio denominata archive, creata (se necessario) in ~. Nella tua home directory, crea una directory chiamata file-archiver e, al suo interno, un file chiamato app.py, utilizzando questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+
+import argparse
+import os
+import sys
+import shutil
+import time
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+Lo script deve accettare esattamente due argomenti da linea di comando, analizzati con il modulo argparse. Il primo argomento, --path, è una stringa obbligatoria che indica il percorso assoluto della directory da controllare. Il secondo argomento, --seconds, è un intero obbligatorio che specifica l’età massima (in secondi) oltre la quale i file devono essere spostati.
+
+Dopo il parsing, valida entrambi gli input: controlla che il percorso sia assoluto (os.path.isabs), esista (os.path.exists) e sia una directory (os.path.isdir); verifica inoltre che --seconds sia un intero positivo. Se un controllo fallisce, stampa un messaggio d’errore esplicativo sullo standard error (print) ed esci con un codice di stato diverso da zero (sys.exit).
+
+Dopo la validazione, assicurati che in ~ esista la cartella archive (os.path.expanduser, os.makedirs). Percorri quindi ricorsivamente l’albero delle directory al percorso fornito come primo argomento (os.listdir, os.path.join, os.path.isdir). Per ogni file incontrato (os.path.isfile), calcola da quanti secondi non viene modificato (os.path.getmtime, time.time). Se l'età in secondi è maggiore o uguale al valore di soglia, sposta il file nella cartella ~/archive (shutil.move) e stampa un messaggio di log sullo standard output (print). Non tentare di spostare directory.
+
+Ad esempio, eseguendo
+
+$ python ~/file-archiver/app.py --path ~/target --seconds 30
+lo script dovrà spostare nella cartella ~/archive tutti i file più vecchi di 30 secondi presenti in ~/target e in tutte le sue sottodirectory.
+
+1.2 SERVICE
+Crea un'unità service denominata file-archiver.service nella tua istanza utente di systemd. Configurala per avviare ~/file-archiver/app.py con gli argomenti --path %h/mydocs e --seconds 30. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+
+1.3 TIMER
+Crea un'unità timer denominata file-archiver.timer nella tua istanza utente di systemd. Configurala per attivare file-archiver.service alle 04:00 di ogni sabato e domenica. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+#
+# comando per abilitare il timer:
+# comando per avviare il timer:
