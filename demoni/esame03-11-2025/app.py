@@ -1,26 +1,32 @@
+#ESAME 03-11-2025
 # nome e cognome: Manila Mingozzi
-# matricola: 
+# matricola: 196050
 #
 # path: $HOME/old-file-detector/app.py
 
 import argparse
+from datetime import datetime
 import os
 import sys
 import time
-
-
-def walk(basepath, threshold, log_file_path):
-    for filename in os.listdir(basepath):
-        path = os.path.join(basepath, filename)
-        if os.path.isfile(path):
-            last_modified = os.path.getmtime(path)
-            if last_modified < threshold:
-                print(f"{path} (last modified: {time.ctime(last_modified)})")
-                with open(log_file_path, "a") as f:
-                    f.write(f"{path}\n")
-                os.remove(path)
-        elif os.path.isdir(path):
-            walk(path, threshold, log_file_path)
+ 
+#funzione che esplora una directory, elimina i file vecchi e li logga
+def walk(basepath, threshold, log_file_path): #basebath = directory da analizzare
+                                              #threshold = tempo limite (se sono piu' vecchi vanno eliminati)
+                                              #log_file_path = file di log
+    for filename in os.listdir(basepath): #prende tutti i nomi dentro la directory
+        path=os.path.join(basepath, filename) #costruisce il path completo
+        #se e' un file: 
+        if os.path.isfile(path): #chide se e' un file normale
+            last_modified = os.path.getmtime(path) #prende l' ultima data di modifica del file (numero di secondi dal 1970)
+            if last_modified < threshold: #lo confronta col tempo limite
+                print(f"{path} (last modified: {time.ctime(last_modified)})") #stampa il percorso e la data leggibile grazie a ctime
+                with open(log_file_path, "a") as f: #apre un file di log in append
+                    f.write(f"{path}\n") #scrive il percorso del file nel log
+                os.remove(path) #elimina il file dal filesystem
+        #se e' una directory:
+        elif os.path.isdir(path): #chiede se e' una directory
+            walk(path, threshold, log_file_path) #chiamata ricorsiva
 
 
 def main():
