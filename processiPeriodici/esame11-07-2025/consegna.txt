@@ -27,3 +27,22 @@ Ad esempio, eseguendo
 
 $ python ~/disk-usage-monitor/app.py --partition / --threshold 80
 lo script controllerà l'utilizzo percentuale della partizione /, registrando nel file di log ~/disk-usage-monitor/disk-usage-monitor.log data, ora e percentuale di spazio usato se questa è uguale o superiore a 80%.
+
+1.2 SERVICE
+Crea un'unità service denominata disk-usage-monitor.service nella tua istanza utente di systemd. L'unità deve avviare ~/disk-usage-monitor/app.py con gli argomenti --partition / e --threshold 90. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path:
+
+1.3 TIMER
+Crea un'unità timer denominata disk-usage-monitor.timer nella tua istanza utente di systemd. Configurala per avviare disk-usage-monitor.service ogni 2 minuti. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path:
+#
+# comando per abilitare il timer:
+# comando per avviare il timer:
