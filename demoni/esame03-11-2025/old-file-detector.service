@@ -1,0 +1,22 @@
+#ESAME 03-11-2025
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
+#
+# path: ~/.config/systemd/user/old-file-detector.service #service per utente non root
+# 
+# comando per abilitare il service: systemctl --user enable odl-file-detector.service
+# comando per avviare il service: systemctl --user start odl-file-detector.service
+
+#descrizione del servizio
+[Unit]
+Description=old file detector service
+
+#definizione di cosa fa il servizio
+[Service]
+Environment=PYTHONUNBUFFERED=1 #print immediati
+WorkingDirectory=%h/old-file-detector #directorry da cui parte il comando
+ExecStart=/usr/bin/python3 app.py --target %h/archive --days 30 --interval 60 --log %h #avvio del comando (nella consegna)
+Restart=on-failure #riavvio automatico
+
+[Install]
+WantedBy=default.target 3il servizio parte da quando l'utente entra in sessione
