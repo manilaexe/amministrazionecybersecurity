@@ -1,0 +1,45 @@
+1.1 SCRIPT PYTHON
+Scrivi uno script Python che periodicamente calcola la dimensione totale di tutti i file presenti in una directory specificata (incluse tutte le sue sottodirectory) e registra nel file di log la data, l'ora e la dimensione totale quando questa supera una certa soglia espressa in byte. Nella tua home directory, crea la directory dir-size-monitor e, al suo interno, il file app.py, utilizzando questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path:
+
+import argparse
+from datetime import datetime
+import os
+import sys
+import time
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da monitorare; --threshold, che specifica la soglia in byte (intero positivo) oltre la quale deve essere registrato un avviso; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e --log, che indica il percorso assoluto della directory dove salvare il file di log. Il nome del file di log è sempre dir-size-monitor.log.
+
+Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla inoltre che i valori forniti per --threshold e --interval siano interi positivi; verifica che il percorso indicato con --log esista, sia una directory e sia assoluto. Se un controllo fallisce, stampa un messaggio di errore esplicativo sullo standard error (print) ed esci con un codice di stato diverso da zero (sys.exit).
+
+Dopo la validazione, percorri ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file incontrato (os.path.isfile), ottieni la sua dimensione (os.path.getsize) e sommala a un accumulatore per calcolare la dimensione totale della directory. Se la dimensione totale è maggiore o uguale alla soglia indicata da --threshold, apri in modalità append il file di log dir-size-monitor.log nella directory specificata con --log (open) e scrivi una riga contenente data e ora corrente (datetime.now), uno spazio e la dimensione totale in byte. Lo script deve ripetere questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
+
+Ad esempio, eseguendo:
+
+$ python ~/dir-size-monitor/app.py \
+    --target ~/documents \
+    --threshold 1000 \
+    --interval 60 \
+    --log ~
+lo script calcolerà la dimensione totale di tutti i file presenti in ~/documents (e in tutte le sue sottodirectory) e, se tale dimensione è maggiore o uguale a 1000 byte, scriverà in append in ~/dir-size-monitor.log la data, l'ora e la dimensione totale. Lo script ripeterà l'operazione ogni 60 secondi.
+
+  1.2 SERVICE
+  Crea un'unità service denominata dir-size-monitor.service nella tua istanza utente di systemd. L'unità deve avviare ~/dir-size-monitor/app.py con gli argomenti --target %h/documents, --threshold 1000, --interval 60, e --log %h, partire all'avvio del sistema e ripartire in caso di fallimenti. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path:
+#
+# comando per abilitare il service:
+# comando per avviare il service:
