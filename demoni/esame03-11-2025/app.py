@@ -1,5 +1,5 @@
-# nome e cognome: mattia fogli
-# matricola: 123456
+# nome e cognome: Manila Mingozzi
+# matricola: 
 #
 # path: $HOME/old-file-detector/app.py
 
