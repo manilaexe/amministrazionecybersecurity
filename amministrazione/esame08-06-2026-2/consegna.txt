@@ -1,0 +1,19 @@
+Configura sudo su una rete di quattro host Linux: edge01, edge02, core01 e core02. La rete ha i seguenti utenti e gruppi:
+
+Utente	Gruppo primario	Gruppi aggiuntivi
+sara	sara	
+tom	tom	
+uma	uma	ident
+vera	vera	pkg
+Applica le seguenti regole:
+
+Categoria	Regola
+Alias	Definisci Host_Alias EDGE = edge01, edge02 e Host_Alias CORE = core01, core02
+Alias	Definisci Cmnd_Alias EDITORS = /usr/bin/vim, /usr/bin/nano, Cmnd_Alias GRPMGM = /usr/sbin/groupadd, /usr/sbin/groupdel e Cmnd_Alias PKGINFO = /usr/bin/dpkg, /usr/bin/apt
+Permessi	sara può eseguire qualsiasi comando come qualsiasi utente su qualsiasi host
+Permessi	tom può eseguire qualsiasi comando come qualsiasi utente su qualsiasi host, eccetto EDITORS
+Permessi	%ident può eseguire GRPMGM come root su EDGE
+Permessi	%pkg può eseguire PKGINFO come root su CORE, senza password
+Permessi	uma può eseguire /usr/bin/cat /etc/sudoers come root su qualsiasi host, senza password
+Permessi	vera può eseguire /usr/bin/id come tom su edge01
+Permessi	%ident, %pkg può eseguire /usr/bin/ss come root su qualsiasi host, senza password
