@@ -13,6 +13,8 @@ Cmnd_Alias USERMGM = /usr/sbin/useradd, /usr/sbin/userdel, /usr/sbin/usermod
 Cmnd_Alias NETINFO = /usr/bin/ip, /usr/bin/ss
 Cmnd_Alias PKGINFO = /usr/bin/dpkg, /usr/bin/apt
 
+#STRUTTRUA GENERALE: CHI   SU QUALI HOST   =   (COME CHI)   COSA PUÒ FARE
+
 #nora può eseguire qualsiasi comando come qualsiasi utente su qualsiasi host
 nora ALL = (ALL) ALL
 
