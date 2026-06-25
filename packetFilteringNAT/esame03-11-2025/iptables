@@ -1,21 +1,46 @@
-# first and last name: Manila Mingozzi
-# student id: 123456
+#ESAME 03-11-2025 
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 
--F
--t nat -F
+-F #cancella tutte le regole precedenti dela tabella filter
+-t nat -F #cancella tutte le regole della tabella nat
 
--P INPUT DROP
--P FORWARD DROP
+-P INPUT DROP #scarta i pacchetti se nessuna regola li autorizza
+-P FORWARD DROP #tutto il traffico che atraversa il firewall viene bloccato salvo autorizzazione
 
--A INPUT -i eth1 -p icmp -j ACCEPT
+#Consenti pacchetti ICMP ricevuti su eth1
+-A INPUT -i eth1 -p icmp -j ACCEPT 
+  #-A: specifica di chi sono i pacchetti toccati dalla regola
+  #INPUT: riguarda il traffico che ?? 
+  #-i: sceglie l'interfaccia di input
+  #-p: protocollo
+  #-j: specifica l'azione da eseguire (ACCEPT, DROP, DNAT, SNAT...)
 
+#Consenti pacchetti SSH (tcp/22) ricevuti su eth1 e provenienti esclusivamente dall'host amministrativo 10.0.0.100
 -A INPUT -i eth1 -s 10.0.0.100 -p tcp --dport 22 -j ACCEPT
+  #--dport: specifica la porta
 
+#Consenti tutti i pacchetti ricevuti su eth1 e in uscita su eth0
 -A FORWARD -i eth1 -o eth0 -j ACCEPT
+  #FORWARD: riguarda il traffico che attraversa il firewall
+  #-o: sceglie l'interfaccia di output
 
+#Consenti pacchetti con stato ESTABLISHED,RELATED
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+  #-m: carica/utilizza un modulo di matching
+  #conntrack: tiene traccia delle connessioni
+  #--ctstate: controlla lo stato della connessione
 
+#SNAT per i pacchetti in uscita su eth0 affinché gli host privati ricevano risposte da Internet
 -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 203.0.113.10
+  #-t: specifica la tabella (nat in questo caso)
+  #POSTROUTING:  il pacchetto è già stato instradato e sta per uscire dall'interfaccia
+  #SNAT: modifica l'indirizzo IP sorgente del pacchetto (chiesto nel testo)
+  #--to-source: sostituisce l'indirizzo sorgente con quello inserito
 
+#DNAT per i pacchetti HTTPS (tcp/443) ricevuti su eth0, inoltrandoli a 10.0.0.50:8443 e assicurandoti che possano raggiungere quell'host
 -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 10.0.0.50:8443
--A FORWARD -i eth0 -o eth1 -p tcp -d 10.0.0.50 --dport 8443 -j ACCEPT
+  #PREROUTING: il pacchetto è appena arrivato, prima che il kernel decida dove inviarlo
+  #DNAT: modifica l'indirizzo IP di destinazione del pacchetto
+  #--to-destination: cambia la destinazione
+-A FORWARD -i eth0 -o eth1 -p tcp -d  10.0.0.50 --dport 8443 -j ACCEPT
