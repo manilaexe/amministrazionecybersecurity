@@ -1,0 +1,44 @@
+1.1 SCRIPT PYTHON
+Scrivi uno script Python che periodicamente analizza una directory specificata (incluse tutte le sue sottodirectory) per rimuovere i file la cui data di ultima modifica è antecedente a una certa soglia espressa in giorni. Nella tua home directory, crea la directory old-file-detector e, al suo interno, il file app.py, utilizzando questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path:
+
+import argparse
+import os
+import sys
+import time
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da controllare; --days, che specifica il numero di giorni (intero positivo) oltre i quali un file è considerato "vecchio"; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e --log, che indica dove salvare il file di log. Il nome del file di log è sempre old-file-detector.log.
+
+Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla inoltre che i valori forniti per --days e --interval siano interi positivi; verifica che il percorso indicato con --log esista (os.path.exists) e sia una directory (os.path.isdir).
+
+Dopo la validazione, percorri quindi ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file (os.path.isfile), ottieni la data di ultima modifica (os.path.getmtime) e confrontala con la soglia temporale corrispondente a --days (calcolando tale soglia come time.time() - days * 86400). Se la data di ultima modifica è antecedente alla soglia, scrivi il percorso assoluto del file in old-file-detector.log (open) e rimuovi tale file (os.remove). Ogni operazione di scrittura nel file di log deve essere fatta in modalità append. Lo script deve ripetere questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
+
+Ad esempio, eseguendo:
+
+$ python ~/old-file-detector/app.py \
+    --target ~/archive \
+    --days 30 \
+    --interval 60 \
+    --log ~
+lo script dovrà individuare tutti i file modificati per l'ultima volta 30 o più giorni fa presenti in ~/archive (e in tutte le sue sottodirectory), scrivere in append in ~/old-file-detector.log il percorso di ciascuno dei file individuati e rimuovere tali file. Lo script ripeterà l'operazione ogni 60 secondi.
+
+1.2 SERVICE
+Crea un'unità service denominata old-file-detector.service nella tua istanza utente di systemd. L'unità deve avviare ~/old-file-detector/app.py con gli argomenti --target %h/archive, --days 30, --interval 60, e --log %h, partire all'avvio del sistema e ripartire in caso di fallimenti. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+# 
+# comando per abilitare il service:
+# comando per avviare il service:
