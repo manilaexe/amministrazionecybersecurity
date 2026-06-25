@@ -1,0 +1,18 @@
+Configura un firewall Linux utilizzando iptables. Il firewall ha due interfacce:
+
+NIC	Indirizzo di rete	IP del firewall	Ambito
+eth0	203.0.113.0/24	203.0.113.10	Pubblico
+eth1	192.168.30.0/24	192.168.30.1	Privato
+Gli host della rete 192.168.30.0/24 utilizzano il firewall come gateway predefinito. L’host 192.168.30.60 esegue un server HTTP sulla porta 8080.
+
+Applica le seguenti regole:
+
+Tabella	Catena	Regola
+filter,nat	*	Elimina tutte le regole esistenti
+filter	INPUT,FORWARD	Scarta tutto a meno che non sia esplicitamente permesso
+filter	INPUT	Consenti pacchetti ICMP ricevuti su eth0 e eth1
+filter	INPUT	Consenti pacchetti SSH (tcp/22) ricevuti su eth1 e provenienti esclusivamente dall’host amministrativo 192.168.30.200
+filter	FORWARD	Consenti tutti i pacchetti ricevuti su eth1 e in uscita su eth0
+filter	FORWARD	Consenti pacchetti con stato ESTABLISHED,RELATED
+nat	POSTROUTING	MASQUERADE pacchetti in uscita da eth0 affinché gli host privati ricevano risposte da Internet
+nat	PREROUTING	Applica DNAT ai pacchetti HTTP (tcp/80) ricevuti su eth0, inoltrandoli a 192.168.30.60:8080 e assicurandoti che possano raggiungere quell'host
