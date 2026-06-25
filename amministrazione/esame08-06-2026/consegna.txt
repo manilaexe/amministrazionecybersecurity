@@ -1,0 +1,20 @@
+Configura sudo su una rete di tre host Linux: runner01, runner02 e registry01. La rete ha i seguenti utenti e gruppi:
+
+Utente	Gruppo primario	Gruppi aggiuntivi
+nora	nora	
+omar	omar	
+priya	priya	dev
+quinn	quinn	sec
+ravi	ravi	ops
+Applica le seguenti regole:
+
+Categoria	Regola
+Alias	Definisci Host_Alias RUNNERS = runner01, runner02
+Alias	Definisci Cmnd_Alias USERMGM = /usr/sbin/useradd, /usr/sbin/userdel, /usr/sbin/usermod, Cmnd_Alias NETINFO = /usr/bin/ip, /usr/bin/ss e Cmnd_Alias PKGINFO = /usr/bin/dpkg, /usr/bin/apt
+Permessi	nora può eseguire qualsiasi comando come qualsiasi utente su qualsiasi host
+Permessi	omar può eseguire qualsiasi comando come qualsiasi utente su qualsiasi host, eccetto USERMGM
+Permessi	%dev può eseguire NETINFO come root su RUNNERS
+Permessi	%sec può eseguire PKGINFO come root su registry01, senza password
+Permessi	priya può eseguire /usr/bin/cat /etc/shadow come root su qualsiasi host, senza password
+Permessi	quinn può eseguire /usr/bin/id come ravi su RUNNERS
+Permessi	%ops, %dev può eseguire /usr/bin/tcpdump come root su qualsiasi host, senza password
