@@ -18,3 +18,4 @@ Permessi	%sec può eseguire PKGINFO come root su registry01, senza password
 Permessi	priya può eseguire /usr/bin/cat /etc/shadow come root su qualsiasi host, senza password
 Permessi	quinn può eseguire /usr/bin/id come ravi su RUNNERS
 Permessi	%ops, %dev può eseguire /usr/bin/tcpdump come root su qualsiasi host, senza password
+Il file deve essere creato in /etc/sudoers.d/fleet .
