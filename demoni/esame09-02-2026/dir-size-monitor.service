@@ -1,20 +1,19 @@
-# first and last name: Manila Mingozzi
-# student id: 123456
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
+# 
+# path:  ~/.config/systemd/user/dir-size-monitor.service
 #
-# path: ~/.config/systemd/user/dir-size-monitor.service
-#
-# command to enable the service: systemctl --user enable dir-size-monitor.service
-# command to start the service: systemctl --user start dir-size-monitor.service
+# comando per abilitare il service: systemctl --user enable dir-size-monitor.service
+# comando per avviare il service: systemctl -- user start dir-size-monitor.service
 
 [Unit]
-Description=dir size monitor service
+Description= dir size monitor service
 
 [Service]
 Environment=PYTHONUNBUFFERED=1
 WorkingDirectory=%h/dir-size-monitor
-ExecStart=/usr/bin/python3 app.py --target %h/documents --threshold 1000 --interval 60 --log %h
+ExecStart= /usr/bin/python3 app.py --target %h/documents --threshold 1000 --interval 60 --log %h
 Restart=on-failure
-RestartSec=5
 
 [Install]
-WantedBy=default.target
+WantedBy=default.target 
