@@ -20,6 +20,7 @@
 #Consenti pacchetti SSH (tcp/22) ricevuti su eth1 e provenienti esclusivamente dall'host amministrativo 10.0.0.100
 -A INPUT -i eth1 -s 10.0.0.100 -p tcp --dport 22 -j ACCEPT
   #--dport: specifica la porta
+  #-s: sorgente
 
 #Consenti tutti i pacchetti ricevuti su eth1 e in uscita su eth0
 -A FORWARD -i eth1 -o eth0 -j ACCEPT
