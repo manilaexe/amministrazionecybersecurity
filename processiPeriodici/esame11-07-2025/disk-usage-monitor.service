@@ -1,12 +1,15 @@
-# first and last name: Manila Mingozzi
-# student id: 
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 #
 # path: ~/.config/systemd/user/disk-usage-monitor.service
 
+#informazioni generali sul servizio
 [Unit]
 Description=disk usage monitor service
 
+#specificate le istruzioni che il systemd deve eseguire quando il servizio viene avviato
 [Service]
-Environment=PYTHONUNBUFFERED=1
-WorkingDirectory=%h/disk-usage-monitor
-ExecStart=/usr/bin/python3 app.py --partition / --threshold 90
+Environment=PYTHONBUFFERED=1 #definisce una variabile d'ambiente
+                             #non tiene l'output in memoria ma lo scrive immediatamente
+WorkingDirectory=%h/disk-usage-monitor #%h e` una variabile speciale e viene sostituita con il nome dell'utente
+ExecStart=/usr/bin/python3 app.py --partition / --threshold 90 #ora che sono nella cartella giusta basta avviare come se fossi da riga di comando
