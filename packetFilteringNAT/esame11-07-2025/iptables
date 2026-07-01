@@ -1,21 +1,31 @@
-# first and last name: mattia fogli
-# student id: 123456
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 
+#Elimina tutte le regole esistenti
 -F
 -t nat -F
 
+#Scarta tutto a meno che non sia esplicitamente permesso
 -P INPUT DROP
 -P FORWARD DROP
 
+#Consenti pacchetti ICMP ricevuti su eth0 e eth1
 -A INPUT -i eth0 -p icmp -j ACCEPT
 -A INPUT -i eth1 -p icmp -j ACCEPT
 
--A INPUT -i eth1 -s 192.168.30.200 -p tcp --dport 22 -j ACCEPT
+#Consenti pacchetti SSH (tcp/22) ricevuti su eth1 e provenienti esclusivamente dall’host amministrativo 192.168.30.200
+-A INPUT -i eth1 -p tcp --dport 22 -s 192.168.30.200 -j ACCEPT
 
+#Consenti tutti i pacchetti ricevuti su eth1 e in uscita su eth0
 -A FORWARD -i eth1 -o eth0 -j ACCEPT
+
+#Consenti pacchetti con stato ESTABLISHED,RELATED
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
--t nat -A POSTROUTING -o eth0 -j MASQUERADE
+#MASQUERADE pacchetti in uscita da eth0 affinché gli host privati ricevano risposte da Internet
+-t nat -A POSTROUTING -o eth0 -j MASQUERADE 
+  #non si usa --to-source con MASQUERADE perche` e` dinamico
 
+#Applica DNAT ai pacchetti HTTP (tcp/80) ricevuti su eth0, inoltrandoli a 192.168.30.60:8080 e assicurandoti che possano raggiungere quell'host
 -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 192.168.30.60:8080
 -A FORWARD -i eth0 -o eth1 -p tcp -d 192.168.30.60 --dport 8080 -j ACCEPT
