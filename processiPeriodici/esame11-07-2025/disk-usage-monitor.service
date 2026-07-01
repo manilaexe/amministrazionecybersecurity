@@ -9,7 +9,7 @@ Description=disk usage monitor service
 
 #specificate le istruzioni che il systemd deve eseguire quando il servizio viene avviato
 [Service]
-Environment=PYTHONBUFFERED=1 #definisce una variabile d'ambiente
+Environment=PYTHONUNBUFFERED=1 #definisce una variabile d'ambiente
                              #non tiene l'output in memoria ma lo scrive immediatamente
 WorkingDirectory=%h/disk-usage-monitor #%h e` una variabile speciale e viene sostituita con il nome dell'utente
 ExecStart=/usr/bin/python3 app.py --partition / --threshold 90 #ora che sono nella cartella giusta basta avviare come se fossi da riga di comando
