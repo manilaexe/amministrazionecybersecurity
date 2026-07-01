@@ -1,17 +1,22 @@
-# first and last name: Manila Mingozzi
-# student id: 
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 #
-# path: ~/.config/systemd/user/disk-usage-monitor.timer
+# path:  ~/.config/user/systemd/disk-usage-monitor.timer
 #
-# command to enable the timer: systemctl --user enable disk-usage-monitor.timer
-# command to start the timer: systemctl --user start disk-usage-monitor.timer
+# comando per abilitare il timer: systemctl --user enable disk-usage-monitor.timer
+# comando per avviare il timer: systemctl --user start disk-usage-monitor.timer
 
+#informazioni generali sul servizio
 [Unit]
 Description=disk usage monitor timer
 
+#definito il service che viene eseguito
 [Timer]
-Unit=disk-usage-monitor.service
-OnCalendar=*:0/2
+Unit=disk-usage-monitor.service #dice al timer cosa attivare quando scatta
+OnCalendar=*:0/2 #dice al timer quando scattare
+                 #*: a qualsiasi ora
+                 #0/2: parti dal minuto zero e ripeti ogni 2 minuti
 
+#edice al systemd come comportarsi quando il timer viene abilitato
 [Install]
-WantedBy=timers.target
+WantedBy=timers.target #quando vengono attivati i timer dell'utente, includi anche questo timer
