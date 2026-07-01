@@ -6,6 +6,7 @@
 -t nat -F #cancella tutte le regole della tabella nat
 
 -P INPUT DROP #scarta i pacchetti se nessuna regola li autorizza
+              #-P: Policy
 -P FORWARD DROP #tutto il traffico che atraversa il firewall viene bloccato salvo autorizzazione
 
 #Consenti pacchetti ICMP ricevuti su eth1
