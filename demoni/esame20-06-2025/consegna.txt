@@ -1,5 +1,7 @@
 1.1 SCRIPT IN PYTHON
-Scrivi uno script Python che periodicamente analizza una directory specificata (incluse tutte le sue sottodirectory) identificando i file la cui dimensione supera o eguaglia una certa soglia (in byte). Ogniqualvolta lo script trova un file la cui dimensione è maggiore o uguale alla soglia deve scrivere il percorso di quel file in un file di log. Nella tua home directory, crea la directory large-file-detector e, al suo interno, il file app.py, utilizzando questo template:
+Scrivi uno script Python che periodicamente analizza una directory specificata (incluse tutte le sue sottodirectory) identificando i file la cui dimensione supera o eguaglia una certa soglia (in byte). 
+Ogniqualvolta lo script trova un file la cui dimensione è maggiore o uguale alla soglia deve scrivere il percorso di quel file in un file di log. Nella tua home directory, crea la directory large-file-
+detector e, al suo interno, il file app.py, utilizzando questo template:
 
 # nome e cognome:
 # matricola:
@@ -18,11 +20,17 @@ def main():
 if __name__ == "__main__":
     main()
 
-Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da controllare; --size, che specifica la dimensione minima in byte (intero positivo) dei file da segnalare; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e infine --log, che indica dove salvare il file di log. Il nome del file di log è sempre large-file-detector.log.
+Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da controllare; --size,
+che specifica la dimensione minima in byte (intero positivo) dei file da segnalare; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e infine --log, che indica dove 
+salvare il file di log. Il nome del file di log è sempre large-file-detector.log.
 
-Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla inoltre che i valori forniti per --size e --interval siano interi positivi; verifica che il percorso indicato con --log esista (os.path.exists) e sia una directory (os.path.isdir).
+Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla 
+inoltre che i valori forniti per --size e --interval siano interi positivi; verifica che il percorso indicato con --log esista (os.path.exists) e sia una directory (os.path.isdir).
 
-Dopo la validazione, percorri quindi ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file (os.path.isfile), calcola la sua dimensione (os.path.getsize) e confrontala con la soglia definita da --size. Se la dimensione è maggiore o uguale alla soglia indicata, scrivi il percorso assoluto del file, seguito da un newline, nel file di log chiamato large-file-detector.log (open), posizionato nella directory specificata con --log. Ogni operazione di scrittura nel file di log deve essere fatta in modalità append. Lo script deve ripetere questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
+Dopo la validazione, percorri quindi ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file (os.path.isfile), calcola la sua 
+dimensione (os.path.getsize) e confrontala con la soglia definita da --size. Se la dimensione è maggiore o uguale alla soglia indicata, scrivi il percorso assoluto del file, seguito da un newline, nel file 
+di log chiamato large-file-detector.log (open), posizionato nella directory specificata con --log. Ogni operazione di scrittura nel file di log deve essere fatta in modalità append. Lo script deve ripetere 
+questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
 
 Ad esempio, eseguendo
 
@@ -31,14 +39,21 @@ $ python ~/large-file-detector/app.py \
     --size 10 \
     --interval 30 \
     --log ~
-lo script dovrà individuare tutti i file di 10 byte o più presenti in ~/archive (e in tutte le sue sottodirectory) e scrivere in append in ~/large-file-detector.log il percorso di ciascuno dei file individuati. Lo script ripeterà l'operazione ogni 30 secondi.
+lo script dovrà individuare tutti i file di 10 byte o più presenti in ~/archive (e in tutte le sue sottodirectory) e scrivere in append in ~/large-file-detector.log il percorso di ciascuno dei file 
+individuati. Lo script ripeterà l'operazione ogni 30 secondi.
 
 1.2 SERVICE
-Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da controllare; --size, che specifica la dimensione minima in byte (intero positivo) dei file da segnalare; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e infine --log, che indica dove salvare il file di log. Il nome del file di log è sempre large-file-detector.log.
+Lo script deve accettare esattamente quattro argomenti obbligatori da linea di comando, analizzati con il modulo argparse: --target, che indica il percorso assoluto della directory da controllare; --size, 
+che specifica la dimensione minima in byte (intero positivo) dei file da segnalare; --interval, che definisce l'intervallo in secondi (intero positivo) tra ogni controllo; e infine --log, che indica dove 
+salvare il file di log. Il nome del file di log è sempre large-file-detector.log.
 
-Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla inoltre che i valori forniti per --size e --interval siano interi positivi; verifica che il percorso indicato con --log esista (os.path.exists) e sia una directory (os.path.isdir).
+Dopo il parsing, valida gli input ricevuti: verifica che il percorso specificato con --target sia assoluto (os.path.isabs), che esista (os.path.exists) e che sia una directory (os.path.isdir); controlla 
+inoltre che i valori forniti per --size e --interval siano interi positivi; verifica che il percorso indicato con --log esista (os.path.exists) e sia una directory (os.path.isdir).
 
-Dopo la validazione, percorri quindi ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file (os.path.isfile), calcola la sua dimensione (os.path.getsize) e confrontala con la soglia definita da --size. Se la dimensione è maggiore o uguale alla soglia indicata, scrivi il percorso assoluto del file, seguito da un newline, nel file di log chiamato large-file-detector.log (open), posizionato nella directory specificata con --log. Ogni operazione di scrittura nel file di log deve essere fatta in modalità append. Lo script deve ripetere questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
+Dopo la validazione, percorri quindi ricorsivamente l'albero delle directory al percorso fornito con --target (os.listdir, os.path.join, os.path.isdir). Per ogni file (os.path.isfile), calcola la sua 
+dimensione (os.path.getsize) e confrontala con la soglia definita da --size. Se la dimensione è maggiore o uguale alla soglia indicata, scrivi il percorso assoluto del file, seguito da un newline, nel file 
+di log chiamato large-file-detector.log (open), posizionato nella directory specificata con --log. Ogni operazione di scrittura nel file di log deve essere fatta in modalità append. Lo script deve ripetere 
+questa procedura periodicamente, attendendo un numero di secondi pari al valore indicato da --interval tra ciascun controllo (time.sleep).
 
 Ad esempio, eseguendo
 
@@ -47,4 +62,5 @@ $ python ~/large-file-detector/app.py \
     --size 10 \
     --interval 30 \
     --log ~
-lo script dovrà individuare tutti i file di 10 byte o più presenti in ~/archive (e in tutte le sue sottodirectory) e scrivere in append in ~/large-file-detector.log il percorso di ciascuno dei file individuati. Lo script ripeterà l'operazione ogni 30 secondi.
+lo script dovrà individuare tutti i file di 10 byte o più presenti in ~/archive (e in tutte le sue sottodirectory) e scrivere in append in ~/large-file-detector.log il percorso di ciascuno dei file 
+individuati. Lo script ripeterà l'operazione ogni 30 secondi.
