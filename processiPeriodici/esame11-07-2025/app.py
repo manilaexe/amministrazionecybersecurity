@@ -10,7 +10,7 @@ import shutil
 import sys
 
 def main():
-    parser = argparse.ArgumentiParser(description="disk usage monitor") #creo un ogetto che analizza gli argomenti della riga di comando
+    parser = argparse.ArgumentParser(description="disk usage monitor") #creo un ogetto che analizza gli argomenti della riga di comando
     #aggiunta dei parametri (partizione e soglia)
     parser.add_argument(
         "--partition",
