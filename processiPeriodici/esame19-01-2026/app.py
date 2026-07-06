@@ -1,7 +1,7 @@
 # nome e cognome: Manila Mingozzi
 # matricola: 196050
 #
-# path: 
+# path: $HOME/file-compressor/app.py
 
 import argparse
 import os
