@@ -1,0 +1,48 @@
+1.1. Script Python
+Scrivi uno script Python che analizza i file di log in una directory specificata e nelle sue sottodirectory, estraendo le righe che contengono una stringa specificata e scrivendole in file di output nella directory di backup denominata backup, creata (se necessario) in ~. Nella tua home directory, crea una directory chiamata log-extractor e, al suo interno, un file chiamato app.py, utilizzando questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+
+import argparse
+import os
+import sys
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+Lo script deve accettare esattamente due argomenti da linea di comando, analizzati con il modulo argparse. Il primo argomento, --path, è una stringa obbligatoria che specifica il percorso assoluto della directory da analizzare. Il secondo argomento, --pattern, è una stringa obbligatoria che specifica il pattern da cercare all'interno dei file di log, ovvero quei file che hanno estensione .log.
+
+Dopo il parsing, valida entrambi gli input: controlla che il percorso sia assoluto (os.path.isabs), esista (os.path.exists) e sia una directory (os.path.isdir); verifica che --pattern sia una stringa non vuota. Se un controllo fallisce, stampa un messaggio di errore esplicativo sullo standard error (print) ed esci con un codice di stato diverso da zero (sys.exit).
+
+Dopo la validazione, assicurati che la directory backup esista in ~ (os.path.expanduser, os.makedirs). Percorri ricorsivamente l'albero delle directory al percorso fornito (os.listdir, os.path.join, os.path.isdir). Per ogni file di log incontrato (os.path.isfile, str.endswith), verifica se contiene il pattern specificato leggendone il contenuto (open). Se il pattern viene trovato, estrai le righe corrispondenti e scrivile in un file con lo stesso nome nella directory ~/backup (open, file.writelines), stampando un messaggio di log sullo standard output (print) che indica il numero di righe scritte e il nome del file di destinazione.
+
+Ad esempio, eseguendo:
+
+$ python ~/log-extractor/app.py \
+    --path ~/logs \
+    --pattern ERROR   
+lo script estrarrà tutte le righe contenenti la stringa ERROR dai file con estensione .log presenti in ~/logs e nelle sue sottodirectory, scrivendole in file corrispondenti nella cartella ~/backup.
+
+1.2. Service
+Crea un'unità service denominata log-extractor.service nella tua istanza utente di systemd. Configurala per eseguire ~/log-extractor/app.py con gli argomenti --path %h/logs e --pattern ERROR. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+1.3. Timer
+Crea un'unità timer denominata log-extractor.timer nella tua istanza utente di systemd. Configurala per attivare log-extractor.service ogni lunedì e venerdì alle 02:00. Usa questo template:
+
+# nome e cognome:
+# matricola:
+#
+# path: 
+#
+# comando per abilitare il timer:
+# comando per avviare il timer:
