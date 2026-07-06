@@ -1,0 +1,12 @@
+# nome e cognome: Manila Mingozzi
+# matricola: 195060
+#
+# path: ~/.config/systemd/user/log-extractor.service
+
+[Unit]
+Description=log extractor service
+
+[Service]
+Environment=PYTHONUNBUFFERED=1
+WorkingDirectory=%h/log-extractor
+ExecStart= /usr/bin/python3 app.py --path %h/logs --pattern ERROR
