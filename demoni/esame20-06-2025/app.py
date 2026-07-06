@@ -1,5 +1,5 @@
-# first and last name: Manila Mingozzi
-# student id: 
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 #
 # path: $HOME/large-file-detector/app.py
 
@@ -8,70 +8,86 @@ import os
 import sys
 import time
 
-
-def walk(basepath, size, log_path):
-    for filename in os.listdir(basepath):
-        path = os.path.join(basepath, filename)
-        if os.path.isfile(path):
-            file_size = os.path.getsize(path)
-            if file_size >= size:
-                print(f"found large file: {path} ({file_size} bytes)")
-                with open(log_path, "a") as log_file:
-                    log_file.write(f"{path}\n")
-        elif os.path.isdir(path):
-            walk(path, size, log_path)
-
+def walk(target, log_path, size):
+    for filename in os.listdir(target):
+        path=os.path.join(target, filename)
+        if os.path.isdir(path):
+            walk(target, path, size)
+        elif os.path.isfile(path):
+            dim=os.path.getsize(path)
+            if dim>=size:
+                print(f"trovato un grande file: {path} ({dim} bytes)")
+                with open (log_path, "a") as f:
+                    f.write(f"{path}\n")    
 
 def main():
-    parser = argparse.ArgumentParser(description="large file detector")
+    parser=argparse.ArgumentParser(description="large file detector")
     parser.add_argument(
         "--target",
         type=str,
         required=True,
-        help="absolute path to the directory to check",
+        help="percorso assoluto del direttorio da controllare"
     )
     parser.add_argument(
         "--size",
         type=int,
         required=True,
-        help="minimum size of files to report in bytes",
+        help="dimensione minima in byte dei file da segnalare"
     )
     parser.add_argument(
-        "--interval", type=int, required=True, help="interval in seconds between checks"
+        "--interval",
+        type=str,
+        required=True,
+        help="intervallo in secondi tra ogni contorllo"
     )
-    parser.add_argument("--log", type=str, required=True, help="directory for log file")
-    args = parser.parse_args()
+    parser.add_argument(
+        "--log",
+        type=str,
+        required=True,
+        help="dove salvare il file di log"
+    )
+    args=parser.parse_args()
+    
+    target=args.target
+    size=args.size 
+    interval=args.interval
+    log=args.log
 
-    if not os.path.isabs(args.target):
-        print(f"error: {args.target} is not an absolute path.", file=sys.stderr)
-        sys.exit(1)
-    if not os.path.exists(args.target):
-        print(f"error: {args.target} does not exist.", file=sys.stderr)
-        sys.exit(1)
-    if not os.path.isdir(args.target):
-        print(f"error: {args.target} is not a directory.", file=sys.stderr)
-        sys.exit(1)
-    if args.size <= 0:
-        print(f"error: --size must be a positive integer.", file=sys.stderr)
-        sys.exit(1)
-    if args.interval <= 0:
-        print(f"error: --interval must be a positive integer.", file=sys.stderr)
-        sys.exit(1)
-    if not os.path.exists(args.log):
-        print(f"error: the path for --log does not exist.", file=sys.stderr)
-        sys.exit(1)
-    if not os.path.isdir(args.log):
-        print(f"error: the path for --log is not a directory.", file=sys.stderr)
-        sys.exit(1)
+    #---VALIDAZIONE DELL'INPUT---
 
-    log_path = os.path.join(args.log, "large-file-detector.log")
+    #taget deve essere un percorso assoluto
+    if not os.path.isabs(target):
+        print(f"{target} deve essere un percorso assoluto", file=sys.stderr)
+        sys.exit(1)
+    #target deve esistere
+    if not os.path.exists(target):
+        print(f"{target} deve esistere", file=sys.stderr)
+        sys.exit(1)
+    #target deve essere un direttorio
+    if not os.path.isdir(target):
+        print(f"{target} deve essere un direttorio", file=sys.stderr)
+        sys.exit(1)
+    #size deve essere un intero positivo
+    if size<=0:
+        print(f"size deve essere un intero positivo", file=sys.stderr)
+        sys.exit(1)
+    #interval deve essere un intero positivo
+    if interval<=0:
+        print(f"interval deve essere un intero positivo", file=sys.stderr)
+        sys.exit(1)
+    #log deve esistere
+    if not os.path.exists(log):
+        print(f"{log} deve esistere", file=sys.stderr)
+        sys.exit(1)
+    #log deve essere un direttorio
+    if not os.path.isdir(log):
+        print(f"{log} deve essere un direttorio", file=sys.stderr)
+        sys.exit(1)
+        
+    logfile=os.path.join(log, "large-file-detector.log")
     while True:
-        walk(args.target, args.size, log_path)
-        try:
-            time.sleep(args.interval)
-        except KeyboardInterrupt:
-            break
-
+        walk(target, logfile, size)
+        time.sleep(interval)
 
 if __name__ == "__main__":
     main()
