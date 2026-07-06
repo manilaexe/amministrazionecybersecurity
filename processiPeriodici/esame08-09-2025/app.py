@@ -71,7 +71,7 @@ def main():
         print(f"{path} deve essere un direttorio", file=sys.stderr)
         sys.exit(1)
     #pattern deve essere una stringa non vota
-    if pattern == "":
+    if not pattern:
         print(f"pattern deve essere una stringa non vuota", file=sys.stderr)
         sys.exit(1)
 
