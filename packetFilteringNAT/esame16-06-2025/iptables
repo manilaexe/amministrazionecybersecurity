@@ -1,24 +1,32 @@
-# first and last name: Manila Mingozzi
-# student id: 
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
 
+#Elimina le regole esistenti
 -F
 -t nat -F
 
+#Scarta tutto a meno che non sia esplicitamente permesso
 -P INPUT DROP
 -P FORWARD DROP
 
+#Consenti pacchetti ICMP ricevuti su eth1
 -A INPUT -i eth1 -p icmp -j ACCEPT
 
+#Consenti pacchetti SSH (tcp/22) ricevuti su eth1
 -A INPUT -i eth1 -p tcp --dport 22 -j ACCEPT
 
+#Consenti pacchetti HTTP (tcp/80) e HTTPS (tcp/443) ricevuti su eth0 e eth1
 -A FORWARD -i eth0 -p tcp --dport 80 -j ACCEPT
--A FORWARD -i eth0 -p tcp --dport 443 -j ACCEPT
+-A FORWARD -i eth0 -P tcp --dport 443 -j ACCEPT
 -A FORWARD -i eth1 -p tcp --dport 80 -j ACCEPT
--A FORWARD -i eth1 -p tcp --dport 443 -j ACCEPT
+-A FORWARD -i eth1 -P tcp --dport 443 -j ACCEPT
 
+#Consenti pacchetti con stato ESTABLISHED,RELATED
 -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
--t nat -A POSTROUTING -o eth0 -j SNAT --to-source 203.0.113.10
+#SNAT per i pacchetti in uscita su eth0 affinché gli host privati ricevano risposte da Internet
+-t nat -A POSTOROUTING -o eth0 -j SNAT --to-source 203.0.113.10
 
--t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 192.168.50.20:30443
--A FORWARD -i eth0 -o eth1 -p tcp -d 192.168.50.20 --dport 30443 -j ACCEPT
+#DNAT per pacchetti HTTPS (tcp/443) ricevuti su eth0 verso 192.168.50.20:30443
+-t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT -to--destination 192.168.50.20:30443
+-A FORWARD -i eth0 -o eth1 -p tcp -d 192.168.50.20 --dport 30443 -j ACCEPT 
