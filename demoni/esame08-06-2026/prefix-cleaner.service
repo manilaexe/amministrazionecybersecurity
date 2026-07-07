@@ -1,0 +1,20 @@
+# nome e cognome: Manila Mingozzi
+# matricola: 196050
+#
+# path: ~/.config/systemd/user/prefix-cleaner.service
+#
+# comando per abilitare il service: --user enable prefix-cleaner
+# comando per avviare il service: --user start prefix-cleaner
+
+[Unit]
+Description= prefix cleaner service
+
+[Service]
+Environment=PYTHONUNBUFFERED=1
+WorkingDirectory=%h/prefix-cleaner/app.py 
+ExecStart=/usr/bin/python3 app.py --target %h/scratch --prefix tmp --interval 60 --log %h
+Restart=onFailure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
