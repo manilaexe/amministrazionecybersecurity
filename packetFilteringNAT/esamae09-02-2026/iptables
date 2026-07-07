@@ -1,0 +1,36 @@
+# nome e cognome: Manila Mingozzi
+# matricola: 196950
+
+#Elimina le regole esistenti
+-F 
+-t nat
+
+#Scarta tutto a meno che non sia esplicitamente permesso
+-P INPUT DROP
+-P FORWARD DROP 
+
+#Consenti pacchetti ICMP ricevuti su eth1
+-A INPUT -i eth1 -p icmp -j ACCEPT
+
+#Consenti pacchetti SSH (tcp/22) ricevuti su eth1
+-A INPUT -i eth1 -p tcp --dport 22 -j ACCEPT
+
+#Consenti pacchetti HTTP (tcp/80) e HTTPS (tcp/443) ricevuti su eth0 e eth1
+-A FORWARD -i eth0 -p tcp --dport 80 -j ACCEPT
+-A FORWARD -i eth0 -p tcp --dport 443 -j ACCEPT
+-A FORWARD -i eth1 -p tcp --dport 80 -j ACCEPT
+-A FORWARD -i eth1 -p tcp --dport 443 -j ACCEPT
+
+#Consenti pacchetti con stato ESTABLISHED,RELATED
+-A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+#MASQUERADE pacchetti in uscita da eth0 affinché gli host privati ricevano risposte da Internet
+-t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+#DNAT per i pacchetti HTTP (tcp/80) ricevuti su eth0, inoltrandoli a 10.20.30.100:8080 e assicurandoti che possano raggiungere quell'host
+-t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 10.20.30.100:8080
+-A FORWARD -i eth0 -o eth1 -p tcp --dport 8080 -d 10.20.30.100 -j ACCEPT
+
+#DNAT per i pacchetti HTTPS (tcp/443) ricevuti su eth0, inoltrandoli a 10.20.30.100:8443 e assicurandoti che possano raggiungere quell'host
+-t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 10.20.30.100:8443
+-A FORWARD -i eth0 -o eth1 -p tcp --dport 8443 -d 10.20.30.100 -j ACCEPT
